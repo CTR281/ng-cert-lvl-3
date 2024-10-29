@@ -1,6 +1,7 @@
 import { CurrentConditions } from './current-conditions/current-conditions.type';
 
+export type ZipCode = string;
 export interface ConditionsAndZip {
-  zip: string;
+  zip: ZipCode;
   data: CurrentConditions;
 }
