@@ -15,7 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { TabsComponent } from './shared/components/tabs/tabs.component';
-import { TabComponent } from './shared/components/tab/tab.component';
+import { TabComponent } from './shared/components/tabs/tab/tab.component';
 import { ComparePipe } from './shared/pipes/compare.pipe';
 import { NotPipe } from './shared/pipes/not.pipe';
 

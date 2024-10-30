@@ -1,9 +1,9 @@
 @if(currentConditionsByZip().length | compare : 0 | not) {
-  <app-tabs (onSelectTab)="selectTab($event)">
-    @for (location of currentConditionsByZip(); track $index) {
-      <app-tab [active]="location.zip | compare : displayConditions()">
+  <app-tabs>
+    @for (location of currentConditionsByZip(); track location) {
+      <app-tab>
         <h3 app-tab-label>{{ location.data.name }} ({{ location.zip }})
-          <span class="close" (click)="locationService.removeLocation(location.zip)"
+          <span class="close" (click)="close(location)"
           >&times;</span
           ></h3>
         <div app-tab-content>

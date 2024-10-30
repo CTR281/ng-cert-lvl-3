@@ -16,22 +16,12 @@ export class WeatherService {
   static ICON_URL =
     'https://raw.githubusercontent.com/udacity/Sunshine-Version-2/sunshine_master/app/src/main/res/drawable-hdpi/';
   private currentConditions = signal<ConditionsAndZip[]>([]);
-  // The currently selected tab. Storing at the service level ensures the data is persisted when navigating out of components.
-  private displayConditions = signal<ZipCode>('');
   private locationService: LocationService = inject(LocationService);
   private http: HttpClient = inject(HttpClient);
 
   constructor() {
     this.initSavedData();
     this.listenToLocationUpdates();
-  }
-
-  setDisplayConditions(zipcode: ZipCode) {
-    this.displayConditions.update(() => zipcode);
-  }
-
-  getDisplayConditions(): Signal<ZipCode> {
-    return this.displayConditions.asReadonly();
   }
 
   getCurrentConditions(): Signal<ConditionsAndZip[]> {
@@ -78,7 +68,7 @@ export class WeatherService {
     forkJoin(savedLocations.map((zipcode) => this.getWeatherData(zipcode)))
       .pipe(map((data) => data.map((value, index) => ({ zip: savedLocations[index], data: value }))))
       .subscribe((initData) => {
-        this.currentConditions.update(() => initData);
+        this.currentConditions.set(initData);
       });
   }
 
@@ -109,13 +99,12 @@ export class WeatherService {
           ),
         ),
       )
-      .subscribe((conditionAndZip) => {
+      .subscribe((conditionAndZip) =>
         this.currentConditions.update((conditions) => [
-          { zip: conditionAndZip.zip, data: conditionAndZip.data },
           ...conditions,
-        ]);
-        this.displayConditions.update(() => conditionAndZip.zip);
-      });
+          { zip: conditionAndZip.zip, data: conditionAndZip.data },
+        ]),
+      );
 
     this.locationService.remove$.pipe(takeUntilDestroyed()).subscribe((zipcode) => {
       this.currentConditions.update((conditions) => {

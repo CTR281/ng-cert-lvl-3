@@ -25,7 +25,7 @@ export class LocationService {
     if (this.locations.find((location) => location === zipcode)) {
       return;
     }
-    this.locations.unshift(zipcode);
+    this.locations.push(zipcode);
     localStorage.setItem(LOCATIONS, JSON.stringify(this.locations));
     this.add.next(zipcode);
   }
