@@ -1,5 +1,5 @@
 import { inject, Injectable, Signal, signal } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
 import { CurrentConditions } from './current-conditions/current-conditions.type';
@@ -20,29 +20,9 @@ export class WeatherService {
   private http: HttpClient = inject(HttpClient);
 
   constructor() {
-    this.locationService.add$
-      .pipe(
-        takeUntilDestroyed(),
-        // when we get notified a location has been added, we fetch the related data from the API.
-        // `concatMap` ensures that the data has been fetched, before moving on to the next notification.
-        // switchMap may discard the ongoing request if we add another location before the response is received.
-        // exhaustMap would ignore all notifications before the response is received.
-        concatMap((zipcode) =>
-          this.http
-            .get<CurrentConditions>(
-              `${WeatherService.URL}/weather?zip=${zipcode},us&units=imperial&APPID=${WeatherService.APPID}`,
-            )
-            .pipe(
-              // because we are listening to a stream of events, any non-caught error would interrupt it.
-              catchError(() => of(null)),
-              filter((data) => data),
-              map((data) => [zipcode, data] as [string, CurrentConditions]),
-            ),
-        ),
-      )
-      .subscribe(([zipcode, data]) =>
-        this.currentConditions.update((conditions) => [...conditions, { zip: zipcode, data }]),
-      );
+    this.initSavedData();
+    this.listenToLocationUpdates();
+  }
 
     this.locationService.remove$.pipe(takeUntilDestroyed()).subscribe((zipcode) => {
       this.currentConditions.update((conditions) => {
@@ -84,5 +64,70 @@ export class WeatherService {
     } else {
       return WeatherService.ICON_URL + 'art_clear.png';
     }
+  }
+
+  /**
+   * Retrieved weather data related to locations saved in storage. Initialization only.
+   * This assumes that LocationService has already parsed the locations, which is the case since it is done
+   * in its constructor, which is invoked before weatherService's since it is a dependency.
+   * @private
+   */
+  private initSavedData() {
+    const savedLocations = this.locationService.locations;
+    if (!savedLocations) {
+      return;
+    }
+    forkJoin(savedLocations.map((zipcode) => this.getWeatherData(zipcode)))
+      .pipe(map((data) => data.map((value, index) => ({ zip: savedLocations[index], data: value }))))
+      .subscribe((initData) => {
+        this.currentConditions.update(() => initData);
+      });
+  }
+
+  private getWeatherData(zipcode: ZipCode): Observable<CurrentConditions> {
+    return this.http.get<CurrentConditions>(
+      `${WeatherService.URL}/weather?zip=${zipcode},us&units=imperial&APPID=${WeatherService.APPID}`,
+    );
+  }
+
+  /**
+   * Init subscriptions to locations update, which will update weather data accordingly
+   * @private
+   */
+  private listenToLocationUpdates(): void {
+    this.locationService.add$
+      .pipe(
+        takeUntilDestroyed(),
+        // when we get notified a location has been added, we fetch the related data from the API.
+        // `concatMap` ensures that the data has been fetched, before moving on to the next notification.
+        // switchMap may discard the ongoing request if we add another location before the response is received.
+        // exhaustMap would ignore all notifications before the response is received.
+        concatMap((zip) =>
+          this.getWeatherData(zip).pipe(
+            // because we are listening to a stream of events, any non-caught error would interrupt it.
+            catchError(() => of(null)),
+            filter((data) => data),
+            map((data) => ({ zip, data }) as ConditionsAndZip),
+          ),
+        ),
+      )
+      .subscribe((conditionAndZip) => {
+        this.currentConditions.update((conditions) => [
+          { zip: conditionAndZip.zip, data: conditionAndZip.data },
+          ...conditions,
+        ]);
+        this.displayConditions.update(() => conditionAndZip.zip);
+      });
+
+    this.locationService.remove$.pipe(takeUntilDestroyed()).subscribe((zipcode) => {
+      this.currentConditions.update((conditions) => {
+        for (const i in conditions) {
+          if (conditions[i].zip === zipcode) {
+            conditions.splice(+i, 1);
+          }
+        }
+        return conditions;
+      });
+    });
   }
 }

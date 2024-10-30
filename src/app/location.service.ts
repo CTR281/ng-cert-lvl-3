@@ -9,9 +9,7 @@ export class LocationService {
   locations: ZipCode[] = [];
   add$: Observable<ZipCode>;
   remove$: Observable<ZipCode>;
-  // because we are parsing the LocalStorage during init and notify listeners that may not be listening yet,
-  // ReplaySubject ensures late subscribers are notified.
-  private add: ReplaySubject<ZipCode> = new ReplaySubject<ZipCode>();
+  private add: Subject<ZipCode> = new Subject<ZipCode>();
   private remove: Subject<ZipCode> = new Subject<ZipCode>();
 
   constructor() {
@@ -21,13 +19,13 @@ export class LocationService {
     if (locString) {
       this.locations = JSON.parse(locString);
     }
-    for (const location of this.locations) {
-      this.add.next(location);
-    }
   }
 
   addLocation(zipcode: string) {
-    this.locations.push(zipcode);
+    if (this.locations.find((location) => location === zipcode)) {
+      return;
+    }
+    this.locations.unshift(zipcode);
     localStorage.setItem(LOCATIONS, JSON.stringify(this.locations));
     this.add.next(zipcode);
   }
