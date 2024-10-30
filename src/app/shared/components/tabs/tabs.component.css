@@ -1,0 +1,5 @@
+.tabs-headers {
+  display: flex;
+  flex-flow: row;
+  gap: .5em;
+}

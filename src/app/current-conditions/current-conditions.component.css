@@ -1,7 +1,40 @@
+:host {
+  display: flex;
+}
+
 .close {
   cursor: pointer;
+  font-size: 1.5em;
+  color: white;
 }
 .flex {
   display: flex;
   justify-content: space-between;
+}
+
+[app-tab-label] {
+  border: solid black;
+  border-width: 1px 1px 0 1px;
+  background-color: #617AA0;
+  color: white;
+  cursor: pointer;
+  padding: .25em .5em;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  gap: .5em;
+  margin: 0;
+}
+
+[app-tab-content] {
+  border: solid 2px black;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-around;
+  padding: 2em 1em;
+  align-items: center;
+}
+
+app-tabs {
+  min-width: 50%;
 }

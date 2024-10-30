@@ -3,7 +3,7 @@ import { forkJoin, Observable, of } from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
 import { CurrentConditions } from './current-conditions/current-conditions.type';
-import { ConditionsAndZip } from './conditions-and-zip.type';
+import { ConditionsAndZip, ZipCode } from './conditions-and-zip.type';
 import { Forecast } from './forecasts-list/forecast.type';
 import { LocationService } from './location.service';
 import { catchError, concatMap, filter, map } from 'rxjs/operators';
@@ -16,6 +16,8 @@ export class WeatherService {
   static ICON_URL =
     'https://raw.githubusercontent.com/udacity/Sunshine-Version-2/sunshine_master/app/src/main/res/drawable-hdpi/';
   private currentConditions = signal<ConditionsAndZip[]>([]);
+  // The currently selected tab. Storing at the service level ensures the data is persisted when navigating out of components.
+  private displayConditions = signal<ZipCode>('');
   private locationService: LocationService = inject(LocationService);
   private http: HttpClient = inject(HttpClient);
 
@@ -24,16 +26,12 @@ export class WeatherService {
     this.listenToLocationUpdates();
   }
 
-    this.locationService.remove$.pipe(takeUntilDestroyed()).subscribe((zipcode) => {
-      this.currentConditions.update((conditions) => {
-        for (const i in conditions) {
-          if (conditions[i].zip === zipcode) {
-            conditions.splice(+i, 1);
-          }
-        }
-        return conditions;
-      });
-    });
+  setDisplayConditions(zipcode: ZipCode) {
+    this.displayConditions.update(() => zipcode);
+  }
+
+  getDisplayConditions(): Signal<ZipCode> {
+    return this.displayConditions.asReadonly();
   }
 
   getCurrentConditions(): Signal<ConditionsAndZip[]> {

@@ -1,0 +1,16 @@
+@if (tabs.length | compare : 0 | not) {
+  <div class="tabs-headers">
+    @for (tab of tabs; track $index) {
+      <div (click)="selectTab(tab)">
+        @if (tab.templateLabel) {
+          <ng-container *ngTemplateOutlet="tab.templateLabel"></ng-container>
+        } @else {
+          {{ tab.inputLabel }}
+        }
+      </div>
+    }
+  </div>
+  @if (activeTab){
+    <ng-container *ngTemplateOutlet="activeTab.content"></ng-container>
+  }
+}

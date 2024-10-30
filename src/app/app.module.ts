@@ -14,6 +14,10 @@ import { routing } from './app.routing';
 import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { TabsComponent } from './shared/components/tabs/tabs.component';
+import { TabComponent } from './shared/components/tab/tab.component';
+import { ComparePipe } from './shared/pipes/compare.pipe';
+import { NotPipe } from './shared/pipes/not.pipe';
 
 @NgModule({
   declarations: [
@@ -32,6 +36,10 @@ import { environment } from '../environments/environment';
     ServiceWorkerModule.register('/ngsw-worker.js', {
       enabled: environment.production,
     }),
+    TabsComponent,
+    TabComponent,
+    ComparePipe,
+    NotPipe,
   ],
   providers: [LocationService, WeatherService],
   bootstrap: [AppComponent],
