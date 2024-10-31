@@ -1,7 +1,7 @@
-@if(currentConditionsByZip().length | compare : 0 | not) {
-  <app-tabs>
+@if(currentConditionsByZip().length | equal : 0 | not) {
+  <app-tabs (select)="saveActiveLocation($event)">
     @for (location of currentConditionsByZip(); track location) {
-      <app-tab>
+      <app-tab [active]="locationService.activeLocation() | equal : location.zip">
         <h3 app-tab-label>{{ location.data.name }} ({{ location.zip }})
           <span class="close" (click)="close(location)"
           >&times;</span

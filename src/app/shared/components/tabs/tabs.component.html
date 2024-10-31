@@ -1,4 +1,4 @@
-@if (tabs().length | compare : 0 | not) {
+@if (tabs().length | equal : 0 | not) {
   <div class="tabs-headers">
     @for (tab of tabs(); track tab) {
       <div (click)="selectTab(tab)">

@@ -4,6 +4,15 @@ An app that showcases how to build a simple app with Angular (running on 17.x)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli).
 
+# STEP \#2 REMARKS
+
+The problem statement mentions: `The parent component doesn’t have to know how to remove a tab or how to
+select a tab`.
+
+Please note that I have added an optional feature that allows the app to remember which tab is active even after navigating to the forecast page and back.
+
+This feature is optional and the tabs do not need the parent to manually track the active tab. To make sure of it, you can remove the `select` output and `active` input bindings in `current-conditions.component.html`.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
@@ -29,13 +38,3 @@ Before running the tests make sure you are serving the app via `ng serve`.
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
-
-### Questions
-- Why is there a service worker when the goal is to implement a http cache
-- Imperative vs declarative (rxjs)
-
-Tab contract:
-- any number of tab
-- generic, reusable
-- tabs can be removed and added
-- 

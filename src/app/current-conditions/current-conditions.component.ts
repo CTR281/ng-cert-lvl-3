@@ -22,4 +22,13 @@ export class CurrentConditionsComponent {
   close(location: ConditionsAndZip): void {
     this.locationService.removeLocation(location.zip);
   }
+
+  /**
+   * Set the location currently displayed.
+   * Called whenever the selected tab is updated.
+   * @param index
+   */
+  saveActiveLocation(index: number) {
+    this.locationService.activeLocation.set(this.currentConditionsByZip()[index].zip);
+  }
 }

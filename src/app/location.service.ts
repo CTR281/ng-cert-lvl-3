@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { ZipCode } from './conditions-and-zip.type';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 
@@ -9,6 +9,9 @@ export class LocationService {
   locations: ZipCode[] = [];
   add$: Observable<ZipCode>;
   remove$: Observable<ZipCode>;
+  // Used to remember which location is displayed as the user navigates through the app.
+  // Note: the tabs component works fine without.
+  activeLocation = signal<ZipCode>('');
   private add: Subject<ZipCode> = new Subject<ZipCode>();
   private remove: Subject<ZipCode> = new Subject<ZipCode>();
 
@@ -28,6 +31,7 @@ export class LocationService {
     this.locations.push(zipcode);
     localStorage.setItem(LOCATIONS, JSON.stringify(this.locations));
     this.add.next(zipcode);
+    this.activeLocation.set(zipcode);
   }
 
   removeLocation(zipcode: string) {

@@ -1,10 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'compare',
+  name: 'equal',
   standalone: true,
 })
-export class ComparePipe implements PipeTransform {
+export class EqualPipe implements PipeTransform {
   transform<T>(a: T, b: T): boolean {
     return a === b;
   }
