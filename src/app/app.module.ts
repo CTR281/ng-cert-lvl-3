@@ -18,6 +18,7 @@ import { TabsComponent } from './shared/components/tabs/tabs.component';
 import { TabComponent } from './shared/components/tabs/tab/tab.component';
 import { ComparePipe } from './shared/pipes/compare.pipe';
 import { NotPipe } from './shared/pipes/not.pipe';
+import { provideCacheInterceptor } from './core/services/cache-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,13 @@ import { NotPipe } from './shared/pipes/not.pipe';
     ComparePipe,
     NotPipe,
   ],
-  providers: [LocationService, WeatherService],
+  providers: [
+    LocationService,
+    WeatherService,
+    provideCacheInterceptor({
+      ttl: 7200000,
+    }),
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

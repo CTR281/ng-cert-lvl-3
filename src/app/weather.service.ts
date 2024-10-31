@@ -86,16 +86,19 @@ export class WeatherService {
     this.locationService.add$
       .pipe(
         takeUntilDestroyed(),
-        // when we get notified a location has been added, we fetch the related data from the API.
+        // when we are notified a location has been added, we fetch the related data from the API.
         // `concatMap` ensures that the data has been fetched, before moving on to the next notification.
         // switchMap may discard the ongoing request if we add another location before the response is received.
         // exhaustMap would ignore all notifications before the response is received.
         concatMap((zip) =>
           this.getWeatherData(zip).pipe(
             // because we are listening to a stream of events, any non-caught error would interrupt it.
-            catchError(() => of(null)),
-            filter((data) => data),
-            map((data) => ({ zip, data }) as ConditionsAndZip),
+            catchError(() => {
+              this.locationService.removeLocation(zip);
+              return of(null);
+            }),
+            filter((data): data is CurrentConditions => !!data),
+            map((data) => ({ zip, data })),
           ),
         ),
       )
