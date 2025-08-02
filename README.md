@@ -1,15 +1,20 @@
 # NgWeather
 
-An app that showcases how to build a simple app with Angular (running on 17.x)
+This project was developed and submitted as part of the requirements for the Angular Level 3 Certification issued by [certificates.dev](https://certificates.dev/).
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli).
+Notable features:
+- A reactive notification system built with RxJS; primarily implemented in [`WeatherService`](./src/app/weather.service.ts) & [`LocationService`](./src/app/location.service.ts).
+- A fully generic and customizable [`tabs`](./src/app/shared/components/tabs/tabs.component.ts) component, designed to be reusable in any context.
+- A simple caching system that leverages localStorage for persistence.
 
-# STEP \#2 REMARKS
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) and runs on Angular 17.x.
+
+# STEP \#2 REMARKS FOR EVALUATION
 
 The problem statement mentions: `The parent component doesn’t have to know how to remove a tab or how to
 select a tab`.
 
-Please note that I have added an optional feature that allows the app to remember which tab is active even after navigating to the forecast page and back.
+Please note that I have added an optional feature that allows the app to remember which tab is active even after leaving the page.
 
 This feature is optional and the tabs do not need the parent to manually track the active tab. To make sure of it, you can remove the `select` output and `active` input bindings in `current-conditions.component.html`.
 
