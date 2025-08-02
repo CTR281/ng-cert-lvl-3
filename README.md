@@ -7,7 +7,7 @@ Notable features:
 - A fully generic and customizable [`tabs`](./src/app/shared/components/tabs/tabs.component.ts) component, designed to be reusable in any context.
 - A simple caching system that leverages localStorage for persistence.
 
-Access the live demo [here](https://ng-cert-lvl-3-n8vpt5d4e-ctr281s-projects.vercel.app/)
+Access the live demo [here](https://ng-cert-lvl-3.vercel.app/).
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) and runs on Angular 17.x.
 
