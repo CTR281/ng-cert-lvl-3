@@ -1,13 +1,17 @@
 # NgWeather
 
+![app-screenshot](doc/assets/ng-weather.png)
+
 This project was developed and submitted as part of the requirements for the Angular Level 3 Certification issued by [certificates.dev](https://certificates.dev/).
 
-Notable features:
-- A reactive notification system built with RxJS; primarily implemented in [`WeatherService`](./src/app/weather.service.ts) & [`LocationService`](./src/app/location.service.ts).
-- A fully generic and customizable [`tabs`](./src/app/shared/components/tabs/tabs.component.ts) component, designed to be reusable in any context.
+It is a fork of [`alcfeoh/ng-weather`](https://github.com/alcfeoh/ng-weather) with additional functionalities implemented.
+
+### Notable features:
+- A reactive notification system built with RxJS; primarily implemented in [`WeatherService`](./src/app/weather.service.ts) and [`LocationService`](./src/app/location.service.ts).
+- A generic and customizable [`TabsComponent`](./src/app/shared/components/tabs/tabs.component.ts), designed to be reusable in any context.
 - A simple caching system that leverages localStorage for persistence.
 
-Access the live demo [here](https://ng-cert-lvl-3.vercel.app/).
+🔗 [**Live demo**](https://ng-cert-lvl-3.vercel.app/)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) and runs on Angular 17.x.
 
